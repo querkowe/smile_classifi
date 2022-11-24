@@ -127,3 +127,19 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+## Custom List
+# cache files
+*/__pycache__/
+*/migrations/
+
+# data files
+*.json
+*.pt
+*.bin
+
+# sandbox
+*/test.html
+
+# static
+static/*
