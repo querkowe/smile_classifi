@@ -1,0 +1,54 @@
+{% extends 'emotion/base.html'%}
+
+{% block title%}
+main
+{% endblock %}
+
+{% block content %}
+  <video autoplay playsinline id="videoElement"></video>
+  <img id="result" width="400" height="300"></img>
+  <canvas id="canvas" width="400" height="300" hidden></canvas>
+  <script type="text/javascript">
+    let canvas = document.getElementById('canvas');
+    let result = document.getElementById('result');
+    let context = canvas.getContext('2d');
+    const video = document.querySelector("#videoElement");
+
+    video.width = 400;
+    video.height = 300;
+    if (navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({
+        video: true
+      })
+      .then(function(stream) {
+        video.srcObject = stream;
+        video.play();
+      })
+      .catch(function(err) {
+      });
+    }
+    let timerId = setInterval(countdown, 1000 / {{ fps }});
+
+    function countdown() {
+        width = video.width;
+        height = video.height;
+        context.drawImage(video, 0, 0, width, height);
+        let dataa = canvas.toDataURL('image/jpeg', 0.5);
+        // context.clearRect(0, 0, width, height);
+        $.ajax({
+          type: 'POST',
+          url: "{% url 'emotion:stream'  %}",
+          data: {
+            'image': dataa,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+          },
+          success: function(data) {
+            result.setAttribute("src", data.Json);
+          },
+          error: function(response) {
+          },
+        });
+      // }
+    }
+  </script>
+{% endblock %}

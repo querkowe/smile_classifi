@@ -1,0 +1,10 @@
+{% extends 'emotion/base.html'%}
+
+{% block title %}
+index
+{% endblock %}
+
+{% block content %}
+{{ content }}
+<a href="{% url 'emotion:main' %}">start</a>
+{% endblock %}
